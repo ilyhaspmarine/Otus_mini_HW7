@@ -83,6 +83,9 @@ https://github.com/ilyhaspmarine/Otus_mini_Client_API_Gateway
 #### Запускаем docker
 У меня docker desktop с виртуализацией VT-d
 
+####
+Создать в каталоге папки ./etc/keys (любым способом)
+
 #### Запускаем minikube (ожидается пустой кластер)
 ```
 minikube start --driver=docker
