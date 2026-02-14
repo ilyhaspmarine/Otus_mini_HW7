@@ -57,8 +57,12 @@ III) тесты постмана, которые прогоняют сценар
 ## ТЕОРЕТИЧЕСКАЯ ЧАСТЬ
 - [только HTTP взаимодействие](theory/01-all_sync.md)  
 - [событийное взаимодействие для нотификаций](theory/02-notif_async.md)
+- [Event Collaboration](theory/03-full_async.md)
 
 ## ПРАКТИЧЕСКАЯ ЧАСТЬ
+### Выбранная архитектура
+- [событийное взаимодействие для нотификаций](theory/02-notif_async.md)
+
 ### Ссылки на репозитории с исходниками микросервисов
 #### Auth (A&A) Service
 https://github.com/ilyhaspmarine/Otus_mini_auth

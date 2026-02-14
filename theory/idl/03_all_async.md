@@ -9,55 +9,6 @@ info:
   title: Order Service
   version: 1.0.0
 paths:
-  /orders:
-    put:
-      tags:
-      - Orders
-      summary: Update order status
-      operationId: order_update_status_orders_put
-      requestBody:
-        content:
-          application/json:
-            schema:
-              $ref: '#/components/schemas/OrderUpdateEvent'
-        required: true
-      responses:
-        '200':
-          description: Successful Response
-          content:
-            application/json:
-              schema:
-                $ref: '#/components/schemas/OrderReturn'
-        '422':
-          description: Validation Error
-          content:
-            application/json:
-              schema:
-                $ref: '#/components/schemas/HTTPValidationError'
-    post:
-      tags:
-      - Orders
-      summary: Create new order
-      operationId: order_create_new_orders_post
-      requestBody:
-        content:
-          application/json:
-            schema:
-              $ref: '#/components/schemas/OrderCreate'
-        required: true
-      responses:
-        '201':
-          description: Successful Response
-          content:
-            application/json:
-              schema:
-                $ref: '#/components/schemas/OrderReturn'
-        '422':
-          description: Validation Error
-          content:
-            application/json:
-              schema:
-                $ref: '#/components/schemas/HTTPValidationError'
   /orders/id/{order_id}:
     get:
       tags:
@@ -116,33 +67,6 @@ paths:
                 $ref: '#/components/schemas/HTTPValidationError'
 components:
   schemas:
-    HTTPValidationError:
-      properties:
-        detail:
-          items:
-            $ref: '#/components/schemas/ValidationError'
-          type: array
-          title: Detail
-      type: object
-      title: HTTPValidationError
-    OrderCreate:
-      properties:
-        price:
-          anyOf:
-          - type: number
-          - type: string
-            pattern: ^(?!^[-+.]*$)[+-]?0*(?:\d{0,13}|(?=[\d.]{1,16}0*$)\d{0,13}\.\d{0,2}0*$)
-          title: Price
-        username:
-          type: string
-          maxLength: 100
-          minLength: 1
-          title: Username
-      type: object
-      required:
-      - price
-      - username
-      title: OrderCreate
     OrderReturn:
       properties:
         price:
@@ -178,26 +102,6 @@ components:
       - placed_at
       - updated_at
       title: OrderReturn
-    OrderUpdateEvent:
-      properties:
-        event:
-          type: string
-          title: Event
-        id:
-          type: string
-          format: uuid
-          title: Id
-        payment_id:
-          anyOf:
-          - type: string
-            format: uuid
-          - type: 'null'
-          title: Payment Id
-      type: object
-      required:
-      - event
-      - id
-      title: OrderUpdateEvent
     ValidationError:
       properties:
         loc:
@@ -817,8 +721,46 @@ components:
 ```
 
 ## Kafka
-### Топик orders
-Собщение об обновлении заказа
+### Топик orders.create
+Собщение о запросе на создание заказа
+- **Producer**: API Gateway
+- **Consumer**: Orders Service
+- **Message structure**: OrderCreateRequested
+```json
+{
+  "username": "string",
+  "price": "decimal"
+}
+```
+
+### Топик orders.pending
+Собщение о запросе на создание заказа
+- **Producer**: Orders Service
+- **Consumer**: Billing Service
+- **Message structure**: OrderPending
+```json
+{
+  "order_id": "uuid",
+  "username": "string",
+  "amount": "decimal"
+}
+```
+
+### Топик billing.payments
+Собщение об обработанных запросах на оплату
+- **Producer**: Billing Service
+- **Consumer**: Orders Service
+- **Message structure**: PaymentProcessed
+```json
+{
+  "order_id": "uuid",
+  "paid": "boolean",
+  "payment_id": "uuid",
+}
+```
+
+### Топик ordersnotifications.orders
+Собщение о необходимости отправки уведомления
 - **Producer**: Orders Service
 - **Consumer**: Notification Service
 - **Message structure**: OrderUpdateMessage
