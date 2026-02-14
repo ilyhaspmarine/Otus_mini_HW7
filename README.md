@@ -54,7 +54,27 @@ III) тесты постмана, которые прогоняют сценар
 использование домена arch.homework в качестве initial значения {{baseUrl}}
 
 
-### ПОДГОТОВКА
+### Ссылки на репозитории с исходниками микросервисов
+#### Auth (A&A) Service
+https://github.com/ilyhaspmarine/Otus_mini_auth
+
+#### Profile Service 
+https://github.com/ilyhaspmarine/Otus_mini_profile
+
+#### Orders Service
+https://github.com/ilyhaspmarine/Otus_mini_orders
+
+#### Billing Service
+https://github.com/ilyhaspmarine/Otus_mini_billing
+
+#### Notification Service
+https://github.com/ilyhaspmarine/Otus_mini_Notification
+
+#### Client API Gateway
+https://github.com/ilyhaspmarine/Otus_mini_Client_API_Gateway
+
+
+### ПОДГОТОВКА К ЗАПУСКУ ПРИЛОЖЕНИЯ
 #### в /etc/hosts прописываем
 ```
 127.0.0.1 arch.homework 
