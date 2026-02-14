@@ -1,0 +1,70 @@
+# Default values for users-app.
+# This is a YAML-formatted file.
+# Declare variables to be passed into your templates.
+
+# This will set the replicaset count more information can be found here: https://kubernetes.io/docs/concepts/workloads/controllers/replicaset/
+replicaCount: 1
+
+# This sets the container image more information can be found here: https://kubernetes.io/docs/concepts/containers/images/
+image:
+  repository: comrademaper/client-api
+  # This sets the pull policy for images.
+  pullPolicy: Always
+  # Overrides the image tag whose default is the chart appVersion.
+  tag: latest
+
+# This is for setting up a service more information can be found here: https://kubernetes.io/docs/concepts/services-networking/service/
+service:
+  # This sets the service type more information can be found here: https://kubernetes.io/docs/concepts/services-networking/service/#publishing-services-service-types
+  type: ClusterIP
+  # This sets the ports more information can be found here: https://kubernetes.io/docs/concepts/services-networking/service/#field-spec-ports
+  port: 80
+  portName: http
+
+ingress:
+  pathType: ImplementationSpecific
+  host: arch.homework
+  path: /client
+  ingressClassName: nginx
+
+jwt:
+  mountPath: "/etc/keys"
+  public: "public.pem"
+
+auth_url:
+  host: "auth-service.auth"
+  path: None
+  login: "login"
+  register: "register"
+  port: "80"
+
+profile_url:
+  host: "profile-service.profile"
+  path: None
+  create: "users"
+  get: "users"
+  upd: "users"
+  port: "80"
+
+billing_url:
+  host: "billing-service.billing"
+  path: None
+  register: "register"
+  transaction: "transaction"
+  wallet: "wallet"
+  port: "80"
+
+order_url:
+  host: "order-service.order"
+  path: None
+  create: "orders"
+  event: "orders"
+  get_by_id: "orders/id"
+  get_by_user: "orders/user"
+  port: "80"
+
+notifications_url:
+  host: "notifications-service.notif"
+  path: None
+  get_by_order_id: "order"
+  port: "80"

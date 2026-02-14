@@ -1,0 +1,100 @@
+apiVersion: apps/v1
+kind: Deployment
+metadata:
+  name: {{ include "client-api.appName" . | quote }}
+  labels:
+    app: {{ include "client-api.appName" . | quote }}
+spec:
+  replicas: {{ .Values.replicaCount }}
+  selector:
+    matchLabels:
+      app: {{ include "client-api.appName" . | quote }}
+  template:
+    metadata:
+      labels:
+        app: {{ include "client-api.appName" . | quote }}
+    spec:
+      containers:
+        - name: {{ include "client-api.appName" . | quote }}
+          image: "{{ .Values.image.repository }}:{{ .Values.image.tag | default .Chart.AppVersion }}"
+          ports:
+            - containerPort: 8000
+          volumeMounts:
+          - name: jwt-keys
+            mountPath: {{ .Values.jwt.mountPath }}
+            readOnly: true
+          env:                    
+          - name: AUTH_HOST
+            value:  {{ .Values.auth_url.host }}
+          - name: AUTH_PATH
+            value: {{ .Values.auth_url.path }}
+          - name: AUTH_LOGIN_ENDPOINT
+            value: {{ .Values.auth_url.login }}  
+          - name: AUTH_REG_ENDPOINT
+            value: {{ .Values.auth_url.register }}   
+          - name: AUTH_PORT
+            value: {{ .Values.auth_url.port | quote }}      
+          - name: JWT_PUBLIC_PATH
+            value: {{ include "client-api.jwtPublicPath" . | quote }}
+          - name: PROFILE_HOST
+            value: {{ .Values.profile_url.host }}
+          - name: PROFILE_PATH
+            value: {{ .Values.profile_url.path }}
+          - name: PROFILE_CREATE_ENDPOINT
+            value:  {{ .Values.profile_url.create }}
+          - name: PROFILE_GET_ENDPOINT
+            value: {{ .Values.profile_url.get }}
+          - name: PROFILE_UPD_ENDPOINT
+            value:  {{ .Values.profile_url.upd }}
+          - name: PROFILE_PORT
+            value:  {{ .Values.profile_url.port | quote}}
+          - name: BILLING_HOST
+            value: {{ .Values.billing_url.host }}
+          - name: BILLING_PATH
+            value: {{ .Values.billing_url.path }}
+          - name: BILLING_PORT
+            value: {{ .Values.billing_url.port | quote}}
+          - name: BILLING_CREATE_ENDPOINT
+            value: {{ .Values.billing_url.register }}
+          - name: BILLING_WALLET_GET_ENDPOINT
+            value: {{ .Values.billing_url.wallet }}
+          - name: BILLING_TRANSACTION_ENDPOINT
+            value: {{ .Values.billing_url.transaction }}
+          - name: ORDERS_HOST
+            value: {{ .Values.order_url.host }}
+          - name: ORDERS_PATH
+            value: {{ .Values.order_url.path }}
+          - name: ORDERS_PORT
+            value: {{ .Values.billing_url.port | quote}}
+          - name: ORDERS_CREATE_ENDPOINT
+            value: {{ .Values.order_url.create }}
+          - name: ORDERS_EVENT_ENDPOINT
+            value: {{ .Values.order_url.event }}
+          - name: ORDERS_GET_BY_ID_ENDPOINT
+            value: {{ .Values.order_url.get_by_id }}
+          - name: ORDERS_GET_BY_USER_ENDPOINT
+            value: {{ .Values.order_url.get_by_user }}
+          - name: NOTIFICATIONS_HOST
+            value: {{ .Values.notifications_url.host }}
+          - name: NOTIFICATIONS_PATH
+            value: {{ .Values.notifications_url.path }}
+          - name: NOTIFICATIONS_PORT
+            value: {{ .Values.notifications_url.port | quote}}
+          - name: NOTIFICATIONS_GET_BY_ORDER_ID_ENDPOINT
+            value: {{  .Values.notifications_url.get_by_order_id }}
+          livenessProbe:
+            httpGet:
+              path: /health/
+              port: 8000
+            initialDelaySeconds: 10
+            periodSeconds: 10
+          readinessProbe:
+            httpGet:
+              path: /health/
+              port: 8000
+            initialDelaySeconds: 5
+            periodSeconds: 5
+      volumes:
+      - name: jwt-keys
+        secret:
+          secretName: jwt-validation-key

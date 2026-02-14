@@ -1,0 +1,712 @@
+{
+  "info": {
+    "_postman_id": "96c788e6-d1fe-4e89-bc65-327515a5317c",
+    "name": "HW7_Collection",
+    "schema": "https://schema.getpostman.com/json/collection/v2.1.0/collection.json",
+    "_exporter_id": "9701531"
+  },
+  "item": [
+    {
+      "name": "health",
+      "event": [
+        {
+          "listen": "prerequest",
+          "script": {
+            "exec": [
+              "pm.collectionVariables.set(\"base_url\", \"arch.homework/client\")"
+            ],
+            "type": "text/javascript",
+            "packages": {},
+            "requests": {}
+          }
+        }
+      ],
+      "request": {
+        "method": "GET",
+        "header": [],
+        "url": {
+          "raw": "{{base_url}}/health",
+          "host": [
+            "{{base_url}}"
+          ],
+          "path": [
+            "health"
+          ]
+        }
+      },
+      "response": []
+    },
+    {
+      "name": "register",
+      "event": [
+        {
+          "listen": "test",
+          "script": {
+            "exec": [
+              "pm.test(\"New user successfully registered (status 201)\", () => {\r",
+              "    pm.expect(pm.response.code).to.equal(201);\r",
+              "});"
+            ],
+            "type": "text/javascript",
+            "packages": {},
+            "requests": {}
+          }
+        },
+        {
+          "listen": "prerequest",
+          "script": {
+            "exec": [
+              "// Генерация случайного логина\r",
+              "function generateRandomUsername() {\r",
+              "    const adjectives = [\r",
+              "        'happy', 'sunny', 'clever', 'brave', 'swift', 'wise', \r",
+              "        'cool', 'smart', 'quick', 'lucky', 'funny', 'crazy',\r",
+              "        'epic', 'magic', 'super', 'alpha', 'omega', 'nova'\r",
+              "    ];\r",
+              "    \r",
+              "    const nouns = [\r",
+              "        'user', 'player', 'hero', 'coder', 'dev', 'tester',\r",
+              "        'admin', 'master', 'ninja', 'wizard', 'knight', 'dragon',\r",
+              "        'tiger', 'wolf', 'eagle', 'shark', 'ghost', 'robot'\r",
+              "    ];\r",
+              "    \r",
+              "    const randomNumber = Math.floor(Math.random() * 10000);\r",
+              "    \r",
+              "    const randomAdj = adjectives[Math.floor(Math.random() * adjectives.length)];\r",
+              "    const randomNoun = nouns[Math.floor(Math.random() * nouns.length)];\r",
+              "    \r",
+              "    return `${randomAdj}_${randomNoun}_${randomNumber}`;\r",
+              "}\r",
+              "\r",
+              "function generatePhone() {\r",
+              "    const timestamp = Date.now().toString().slice(-7);\r",
+              "    \r",
+              "    return `+7916${timestamp}`;\r",
+              "}\r",
+              "\r",
+              "// Телефон\r",
+              "const phone = generatePhone();\r",
+              "\r",
+              "// Логин\r",
+              "const username = generateRandomUsername();\r",
+              "\r",
+              "// email на основе логина\r",
+              "const email = `${username}@mail.com`;\r",
+              "\r",
+              "// Сохраняем в переменные\r",
+              "pm.collectionVariables.set(\"user1_uname\", username)\r",
+              "pm.collectionVariables.set(\"email\", email)\r",
+              "pm.collectionVariables.set(\"phone\", phone)\r",
+              "\r",
+              "console.log('\\n\\{\\{user1_uname\\}\\} = ', username)\r",
+              "console.log('\\n\\{\\{email\\}\\} = ', email)\r",
+              "console.log('\\n\\{\\{phone\\}\\} = ', phone)"
+            ],
+            "type": "text/javascript",
+            "packages": {},
+            "requests": {}
+          }
+        }
+      ],
+      "request": {
+        "method": "POST",
+        "header": [],
+        "body": {
+          "mode": "raw",
+          "raw": "{\r\n    \"username\": \"{{user1_uname}}\",\r\n    \"firstName\": \"Ivan\",\r\n    \"lastName\": \"Ivanov\",\r\n    \"email\": \"{{email}}\",\r\n    \"phone\": \"{{phone}}\",\r\n    \"password\": \"qwerty\"\r\n}",
+          "options": {
+            "raw": {
+              "language": "json"
+            }
+          }
+        },
+        "url": {
+          "raw": "{{base_url}}/register",
+          "host": [
+            "{{base_url}}"
+          ],
+          "path": [
+            "register"
+          ]
+        }
+      },
+      "response": []
+    },
+    {
+      "name": "login",
+      "event": [
+        {
+          "listen": "test",
+          "script": {
+            "exec": [
+              "pm.test(\"Login successful (status 200)\", () => {\r",
+              "    pm.expect(pm.response.code).to.equal(200);\r",
+              "});\r",
+              "\r",
+              "const response = pm.response.json();\r",
+              "pm.collectionVariables.set(\"access_token\", response.access_token);"
+            ],
+            "type": "text/javascript",
+            "packages": {},
+            "requests": {}
+          }
+        }
+      ],
+      "request": {
+        "method": "POST",
+        "header": [],
+        "body": {
+          "mode": "urlencoded",
+          "urlencoded": [
+            {
+              "key": "username",
+              "value": "{{user1_uname}}",
+              "type": "text",
+              "uuid": "74c93dbc-87b4-4e33-b2d3-0a37419b3957"
+            },
+            {
+              "key": "password",
+              "value": "qwerty",
+              "type": "text",
+              "uuid": "a3588a67-2cb0-48c4-977a-d2481ee32a8d"
+            }
+          ]
+        },
+        "url": {
+          "raw": "{{base_url}}/login",
+          "host": [
+            "{{base_url}}"
+          ],
+          "path": [
+            "login"
+          ]
+        }
+      },
+      "response": []
+    },
+    {
+      "name": "create transaction",
+      "event": [
+        {
+          "listen": "test",
+          "script": {
+            "exec": [
+              "pm.test(\"Transaction created (status 200)\", () => {\r",
+              "    pm.expect(pm.response.code).to.equal(200);\r",
+              "});"
+            ],
+            "type": "text/javascript",
+            "packages": {},
+            "requests": {}
+          }
+        }
+      ],
+      "request": {
+        "auth": {
+          "type": "bearer",
+          "bearer": [
+            {
+              "key": "token",
+              "value": "{{access_token}}",
+              "type": "string"
+            }
+          ]
+        },
+        "method": "POST",
+        "header": [],
+        "body": {
+          "mode": "raw",
+          "raw": "{\r\n    \"username\": \"{{user1_uname}}\",\r\n    \"amount\": \"12345\"\r\n}",
+          "options": {
+            "raw": {
+              "language": "json"
+            }
+          }
+        },
+        "url": {
+          "raw": "{{base_url}}/transaction",
+          "host": [
+            "{{base_url}}"
+          ],
+          "path": [
+            "transaction"
+          ]
+        }
+      },
+      "response": []
+    },
+    {
+      "name": "get wallet before order",
+      "event": [
+        {
+          "listen": "test",
+          "script": {
+            "exec": [
+              "pm.test(\"Wallet accessed before order (status 200)\", () => {\r",
+              "    pm.expect(pm.response.code).to.equal(200);\r",
+              "});\r",
+              "\r",
+              "const response = pm.response.json();\r",
+              "pm.collectionVariables.set(\"money_left\", response.amount);"
+            ],
+            "type": "text/javascript",
+            "packages": {},
+            "requests": {}
+          }
+        }
+      ],
+      "request": {
+        "auth": {
+          "type": "bearer",
+          "bearer": [
+            {
+              "key": "token",
+              "value": "{{access_token}}",
+              "type": "string"
+            }
+          ]
+        },
+        "method": "GET",
+        "header": [],
+        "url": {
+          "raw": "{{base_url}}/wallet/{{user1_uname}}",
+          "host": [
+            "{{base_url}}"
+          ],
+          "path": [
+            "wallet",
+            "{{user1_uname}}"
+          ]
+        }
+      },
+      "response": []
+    },
+    {
+      "name": "Place order sufficient",
+      "event": [
+        {
+          "listen": "test",
+          "script": {
+            "exec": [
+              "pm.test(\"First order placed (enough money, status 201)\", () => {\r",
+              "    pm.expect(pm.response.code).to.equal(201);\r",
+              "});\r",
+              "\r",
+              "const response = pm.response.json();\r",
+              "pm.collectionVariables.set(\"order_sufficient_id\", response.id);"
+            ],
+            "type": "text/javascript",
+            "packages": {},
+            "requests": {}
+          }
+        },
+        {
+          "listen": "prerequest",
+          "script": {
+            "exec": [
+              "pm.collectionVariables.set(\"order_price\", 123)"
+            ],
+            "type": "text/javascript",
+            "packages": {},
+            "requests": {}
+          }
+        }
+      ],
+      "request": {
+        "auth": {
+          "type": "bearer",
+          "bearer": [
+            {
+              "key": "token",
+              "value": "{{access_token}}",
+              "type": "string"
+            }
+          ]
+        },
+        "method": "POST",
+        "header": [],
+        "body": {
+          "mode": "raw",
+          "raw": "{\r\n    \"username\": \"{{user1_uname}}\",\r\n    \"price\": \"{{order_price}}\"\r\n}",
+          "options": {
+            "raw": {
+              "language": "json"
+            }
+          }
+        },
+        "url": {
+          "raw": "{{base_url}}/orders",
+          "host": [
+            "{{base_url}}"
+          ],
+          "path": [
+            "orders"
+          ]
+        }
+      },
+      "response": []
+    },
+    {
+      "name": "get wallet after sufficient",
+      "event": [
+        {
+          "listen": "test",
+          "script": {
+            "exec": [
+              "pm.test(\"Wallet accessed after first order (status 200)\", () => {\r",
+              "    pm.expect(pm.response.code).to.equal(200);\r",
+              "});\r",
+              "\r",
+              "const response = pm.response.json();\r",
+              "const money_before = pm.collectionVariables.get(\"money_left\") \r",
+              "const money_after = response.amount\r",
+              "const expected_delta = money_before - money_after\r",
+              "\r",
+              "pm.test(\"Money changed after first order\", () =>{\r",
+              "    pm.expect(expected_delta).to.equal(pm.collectionVariables.get(\"order_price\"))\r",
+              "})\r",
+              "\r",
+              "pm.collectionVariables.set(\"money_left\", money_after);\r",
+              "\r",
+              "setTimeout(() => {\r",
+              "    // ничего не делаем, просто ждем\r",
+              "}, 5000);"
+            ],
+            "type": "text/javascript",
+            "packages": {},
+            "requests": {}
+          }
+        },
+        {
+          "listen": "prerequest",
+          "script": {
+            "exec": [
+              ""
+            ],
+            "type": "text/javascript",
+            "packages": {},
+            "requests": {}
+          }
+        }
+      ],
+      "request": {
+        "auth": {
+          "type": "bearer",
+          "bearer": [
+            {
+              "key": "token",
+              "value": "{{access_token}}",
+              "type": "string"
+            }
+          ]
+        },
+        "method": "GET",
+        "header": [],
+        "url": {
+          "raw": "{{base_url}}/wallet/{{user1_uname}}",
+          "host": [
+            "{{base_url}}"
+          ],
+          "path": [
+            "wallet",
+            "{{user1_uname}}"
+          ]
+        }
+      },
+      "response": []
+    },
+    {
+      "name": "get notifications for sufficient order",
+      "event": [
+        {
+          "listen": "test",
+          "script": {
+            "exec": [
+              "pm.test(\"Notification for first order found (status 200)\", () => {\r",
+              "    pm.expect(pm.response.code).to.equal(200);\r",
+              "});"
+            ],
+            "type": "text/javascript",
+            "packages": {},
+            "requests": {}
+          }
+        }
+      ],
+      "request": {
+        "auth": {
+          "type": "bearer",
+          "bearer": [
+            {
+              "key": "token",
+              "value": "{{access_token}}",
+              "type": "string"
+            }
+          ]
+        },
+        "method": "GET",
+        "header": [],
+        "url": {
+          "raw": "{{base_url}}/notifications/{{order_sufficient_id}}",
+          "host": [
+            "{{base_url}}"
+          ],
+          "path": [
+            "notifications",
+            "{{order_sufficient_id}}"
+          ]
+        }
+      },
+      "response": []
+    },
+    {
+      "name": "Place order insufficient",
+      "event": [
+        {
+          "listen": "test",
+          "script": {
+            "exec": [
+              "pm.test(\"Second (Unpayable) order created (and cancelled) (status 200)\", () => {\r",
+              "    pm.expect(pm.response.code).to.equal(201);\r",
+              "});\r",
+              "\r",
+              "const response = pm.response.json();\r",
+              "pm.collectionVariables.set(\"order_insufficient_id\", response.id);\r",
+              "\r",
+              "pm.test(\"Unpayable order is in cancelled status\", () => {\r",
+              "    pm.expect(response.status).to.equal(\"cancelled\")\r",
+              "})"
+            ],
+            "type": "text/javascript",
+            "packages": {},
+            "requests": {}
+          }
+        },
+        {
+          "listen": "prerequest",
+          "script": {
+            "exec": [
+              "pm.collectionVariables.set(\"order_price\", 123555)\r",
+              ""
+            ],
+            "type": "text/javascript",
+            "packages": {},
+            "requests": {}
+          }
+        }
+      ],
+      "request": {
+        "auth": {
+          "type": "bearer",
+          "bearer": [
+            {
+              "key": "token",
+              "value": "{{access_token}}",
+              "type": "string"
+            }
+          ]
+        },
+        "method": "POST",
+        "header": [],
+        "body": {
+          "mode": "raw",
+          "raw": "{\r\n    \"username\": \"{{user1_uname}}\",\r\n    \"price\": \"{{order_price}}\"\r\n}",
+          "options": {
+            "raw": {
+              "language": "json"
+            }
+          }
+        },
+        "url": {
+          "raw": "{{base_url}}/orders",
+          "host": [
+            "{{base_url}}"
+          ],
+          "path": [
+            "orders"
+          ]
+        }
+      },
+      "response": []
+    },
+    {
+      "name": "get wallet after insufficient",
+      "event": [
+        {
+          "listen": "test",
+          "script": {
+            "exec": [
+              "pm.test(\"Wallet accessed after second order (status 200)\", () => {\r",
+              "    pm.expect(pm.response.code).to.equal(200);\r",
+              "});\r",
+              "\r",
+              "const response = pm.response.json();\r",
+              "const money_before = pm.collectionVariables.get(\"money_left\") \r",
+              "const money_after = response.amount\r",
+              "const expected_delta = money_before - money_after\r",
+              "\r",
+              "pm.test(\"Money unchanged after second order\", () =>{\r",
+              "    pm.expect(expected_delta).to.equal(0)\r",
+              "})\r",
+              "\r",
+              "pm.collectionVariables.set(\"money_left\", money_after);\r",
+              "\r",
+              "setTimeout(() => {\r",
+              "    // ничего не делаем, просто ждем\r",
+              "}, 5000);"
+            ],
+            "type": "text/javascript",
+            "packages": {},
+            "requests": {}
+          }
+        },
+        {
+          "listen": "prerequest",
+          "script": {
+            "exec": [
+              ""
+            ],
+            "type": "text/javascript",
+            "packages": {},
+            "requests": {}
+          }
+        }
+      ],
+      "request": {
+        "auth": {
+          "type": "bearer",
+          "bearer": [
+            {
+              "key": "token",
+              "value": "{{access_token}}",
+              "type": "string"
+            }
+          ]
+        },
+        "method": "GET",
+        "header": [],
+        "url": {
+          "raw": "{{base_url}}/wallet/{{user1_uname}}",
+          "host": [
+            "{{base_url}}"
+          ],
+          "path": [
+            "wallet",
+            "{{user1_uname}}"
+          ]
+        }
+      },
+      "response": []
+    },
+    {
+      "name": "get notifications for insufficient order Copy",
+      "event": [
+        {
+          "listen": "test",
+          "script": {
+            "exec": [
+              "pm.test(\"Notification for first order found (status 200)\", () => {\r",
+              "    pm.expect(pm.response.code).to.equal(200);\r",
+              "});"
+            ],
+            "type": "text/javascript",
+            "packages": {},
+            "requests": {}
+          }
+        }
+      ],
+      "request": {
+        "auth": {
+          "type": "bearer",
+          "bearer": [
+            {
+              "key": "token",
+              "value": "{{access_token}}",
+              "type": "string"
+            }
+          ]
+        },
+        "method": "GET",
+        "header": [],
+        "url": {
+          "raw": "{{base_url}}/notifications/{{order_insufficient_id}}",
+          "host": [
+            "{{base_url}}"
+          ],
+          "path": [
+            "notifications",
+            "{{order_insufficient_id}}"
+          ]
+        }
+      },
+      "response": []
+    }
+  ],
+  "event": [
+    {
+      "listen": "prerequest",
+      "script": {
+        "type": "text/javascript",
+        "packages": {},
+        "requests": {},
+        "exec": [
+          "console.log(\"Request: \\n\", pm.request)"
+        ]
+      }
+    },
+    {
+      "listen": "test",
+      "script": {
+        "type": "text/javascript",
+        "packages": {},
+        "requests": {},
+        "exec": [
+          "console.log(\"\\n-----------------------------\\n\")\r",
+          "\r",
+          "console.log(\"Response:\\n\", pm.response)"
+        ]
+      }
+    }
+  ],
+  "variable": [
+    {
+      "key": "access_token",
+      "value": ""
+    },
+    {
+      "key": "base_url",
+      "value": ""
+    },
+    {
+      "key": "user1_uname",
+      "value": ""
+    },
+    {
+      "key": "user2_uname",
+      "value": ""
+    },
+    {
+      "key": "email",
+      "value": ""
+    },
+    {
+      "key": "phone",
+      "value": ""
+    },
+    {
+      "key": "money_left",
+      "value": ""
+    },
+    {
+      "key": "order_price",
+      "value": ""
+    },
+    {
+      "key": "order_sufficient_id",
+      "value": ""
+    },
+    {
+      "key": "order_insufficient_id",
+      "value": ""
+    }
+  ]
+}

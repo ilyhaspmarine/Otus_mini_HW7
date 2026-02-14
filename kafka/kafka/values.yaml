@@ -1,0 +1,42 @@
+nameOverride: ""
+fullnameOverride: ""
+kafka:
+  enabled: true
+  fullnameOverride: kafka
+
+  externalAccess:
+    enabled: false
+    autoDiscovery:
+      enabled: true
+    controller:
+      service:
+        type: LoadBalancer
+    broker:
+      service:
+        type: LoadBalancer
+  serviceAccount:
+    create: true
+  rbac:
+    create: true
+  kraft:
+    enabled: true
+  zookeeper:
+    enabled: false
+
+  image:
+    registry: docker.io
+    repository: bitnamilegacy/kafka
+    tag: 4.0.0-debian-12-r10
+
+  # controller:
+  # replicaCount: 2
+  auth:
+    clientProtocol: sasl          # ← ИСПРАВЛЕНО
+    interBrokerProtocol: sasl     # ← ИСПРАВЛЕНО
+    controllerProtocol: sasl      # ← ДОБАВЛЕНО (обязательно для KRaft)
+    sasl:
+      enabled: true               # ← ИСПРАВЛЕНО
+      mechanisms: "PLAIN"         # ← ДОБАВЛЕНО
+      interBrokerMechanism: "PLAIN"  # ← ДОБАВЛЕНО
+  sasl:
+    existingSecret: "kafka-secret"
